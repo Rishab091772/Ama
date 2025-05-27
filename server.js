@@ -2,7 +2,7 @@ const express = require("express");
 const session = require("express-session");
 const fileUpload = require("express-fileupload");
 const fs = require("fs");
-const login = require("fca-unofficial");
+const login = require("facebook-chat-api");
 const app = express();
 
 const PORT = process.env.PORT || 10000;
