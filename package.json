@@ -1,14 +1,14 @@
 {
-  "name": "group-lock-tool",
-  "version": "1.0.0",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "express": "^4.18.4",
-    "express-fileupload": "^1.4.0",
-    "express-session": "^1.17.3",
-    "ws3-fca": "^1.4.1"
-  }
+  "name": "group-lock-tool",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.4",
+    "express-fileupload": "^1.4.0",
+    "express-session": "^1.17.3",
+    "ws3-fca": "^1.4.1"
+  }
 }
