@@ -6,7 +6,6 @@ const login = require("facebook-chat-api");
 const path = require("path");
 
 const app = express();
-
 const PORT = process.env.PORT || 10000;
 const OWNER_ID = "61572798270023";
 
@@ -136,7 +135,7 @@ app.post("/lockname", isLoggedIn, (req, res) => {
   const id = req.body.threadID;
   if (!api) return res.send("Login first.");
   api.getThreadInfo(id, (err, info) => {
-    if (err) return res.send("Failed to get thread info.");
+    if (err) return res.send("Failed to get thread info: " + JSON.stringify(err));
     LOCKED_GROUP_NAMES[id] = info.name;
     res.send(`Group name locked as: ${info.name}`);
   });
@@ -152,7 +151,7 @@ app.post("/locknick", isLoggedIn, (req, res) => {
   const id = req.body.threadID;
   if (!api) return res.send("Login first.");
   api.getThreadInfo(id, (err, info) => {
-    if (err) return res.send("Failed to get thread info.");
+    if (err) return res.send("Failed to get thread info: " + JSON.stringify(err));
     LOCKED_NICKNAMES[id] = {};
     info.participantIDs.forEach(uid => {
       LOCKED_NICKNAMES[id][uid] = info.nicknames[uid] || "";
@@ -166,12 +165,30 @@ app.post("/nickforall", isLoggedIn, (req, res) => {
   const nick = req.body.nickname;
   if (!api) return res.send("Login first.");
   api.getThreadInfo(id, (err, info) => {
-    if (err) return res.send("Failed to get thread info.");
+    if (err) return res.send("Failed to get thread info: " + JSON.stringify(err));
     const users = info.participantIDs;
     users.forEach(uid => {
       api.setNickname(nick, id, uid, () => {});
     });
     res.send(`Nickname "${nick}" set for all in thread ${id}`);
+  });
+});
+
+app.get("/testthread/:id", isLoggedIn, (req, res) => {
+  if (!api) return res.send("Login first or upload appstate again.");
+  let id = req.params.id;
+  if (!id.startsWith("t_")) id = "t_" + id;
+  api.getThreadInfo(id, (err, info) => {
+    if (err) {
+      console.error("Error from getThreadInfo:", err);
+      return res.send("Error getting thread info: " + JSON.stringify(err));
+    }
+    res.send(`
+      <h3>Thread Info</h3>
+      <p><strong>Name:</strong> ${info.name}</p>
+      <p><strong>ID:</strong> ${id}</p>
+      <p><strong>Participants:</strong> ${info.participantIDs.length}</p>
+    `);
   });
 });
 
